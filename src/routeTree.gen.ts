@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as CompareRouteImport } from './routes/compare'
+import { Route as GisRouteImport } from './routes/gis'
 import { Route as UploadRouteImport } from './routes/upload'
 import { Route as ValidationRouteImport } from './routes/validation'
 import { Route as VerificationRouteImport } from './routes/verification'
@@ -25,6 +26,11 @@ const IndexRoute = IndexRouteImport.update({
 const CompareRoute = CompareRouteImport.update({
   id: '/compare',
   path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GisRoute = GisRouteImport.update({
+  id: '/gis',
+  path: '/gis',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UploadRoute = UploadRouteImport.update({
@@ -56,6 +62,7 @@ const RecordsIdRoute = RecordsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/gis': typeof GisRoute
   '/upload': typeof UploadRoute
   '/validation': typeof ValidationRoute
   '/verification': typeof VerificationRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/gis': typeof GisRoute
   '/upload': typeof UploadRoute
   '/validation': typeof ValidationRoute
   '/verification': typeof VerificationRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/compare': typeof CompareRoute
+  '/gis': typeof GisRoute
   '/upload': typeof UploadRoute
   '/validation': typeof ValidationRoute
   '/verification': typeof VerificationRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/compare'
+    | '/gis'
     | '/upload'
     | '/validation'
     | '/verification'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/compare'
+    | '/gis'
     | '/upload'
     | '/validation'
     | '/verification'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/compare'
+    | '/gis'
     | '/upload'
     | '/validation'
     | '/verification'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompareRoute: typeof CompareRoute
+  GisRoute: typeof GisRoute
   UploadRoute: typeof UploadRoute
   ValidationRoute: typeof ValidationRoute
   VerificationRoute: typeof VerificationRoute
@@ -135,6 +148,13 @@ declare module '@tanstack/react-router' {
       path: '/compare'
       fullPath: '/compare'
       preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gis': {
+      id: '/gis'
+      path: '/gis'
+      fullPath: '/gis'
+      preLoaderRoute: typeof GisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/upload': {
@@ -178,6 +198,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompareRoute: CompareRoute,
+  GisRoute: GisRoute,
   UploadRoute: UploadRoute,
   ValidationRoute: ValidationRoute,
   VerificationRoute: VerificationRoute,
