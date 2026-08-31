@@ -10,33 +10,115 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CompareRouteImport } from './routes/compare'
+import { Route as UploadRouteImport } from './routes/upload'
+import { Route as ValidationRouteImport } from './routes/validation'
+import { Route as VerificationRouteImport } from './routes/verification'
+import { Route as RecordsIndexRouteImport } from './routes/records.index'
+import { Route as RecordsIdRouteImport } from './routes/records.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CompareRoute = CompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UploadRoute = UploadRouteImport.update({
+  id: '/upload',
+  path: '/upload',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ValidationRoute = ValidationRouteImport.update({
+  id: '/validation',
+  path: '/validation',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordsIndexRoute = RecordsIndexRouteImport.update({
+  id: '/records/',
+  path: '/records/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecordsIdRoute = RecordsIdRouteImport.update({
+  id: '/records/$id',
+  path: '/records/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/upload': typeof UploadRoute
+  '/validation': typeof ValidationRoute
+  '/verification': typeof VerificationRoute
+  '/records/$id': typeof RecordsIdRoute
+  '/records/': typeof RecordsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/upload': typeof UploadRoute
+  '/validation': typeof ValidationRoute
+  '/verification': typeof VerificationRoute
+  '/records/$id': typeof RecordsIdRoute
+  '/records': typeof RecordsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/compare': typeof CompareRoute
+  '/upload': typeof UploadRoute
+  '/validation': typeof ValidationRoute
+  '/verification': typeof VerificationRoute
+  '/records/$id': typeof RecordsIdRoute
+  '/records/': typeof RecordsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/compare'
+    | '/upload'
+    | '/validation'
+    | '/verification'
+    | '/records/$id'
+    | '/records/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/compare'
+    | '/upload'
+    | '/validation'
+    | '/verification'
+    | '/records/$id'
+    | '/records'
+  id:
+    | '__root__'
+    | '/'
+    | '/compare'
+    | '/upload'
+    | '/validation'
+    | '/verification'
+    | '/records/$id'
+    | '/records/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CompareRoute: typeof CompareRoute
+  UploadRoute: typeof UploadRoute
+  ValidationRoute: typeof ValidationRoute
+  VerificationRoute: typeof VerificationRoute
+  RecordsIdRoute: typeof RecordsIdRoute
+  RecordsIndexRoute: typeof RecordsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +130,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/compare': {
+      id: '/compare'
+      path: '/compare'
+      fullPath: '/compare'
+      preLoaderRoute: typeof CompareRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/upload': {
+      id: '/upload'
+      path: '/upload'
+      fullPath: '/upload'
+      preLoaderRoute: typeof UploadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/validation': {
+      id: '/validation'
+      path: '/validation'
+      fullPath: '/validation'
+      preLoaderRoute: typeof ValidationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/records/': {
+      id: '/records/'
+      path: '/records'
+      fullPath: '/records/'
+      preLoaderRoute: typeof RecordsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/records/$id': {
+      id: '/records/$id'
+      path: '/records/$id'
+      fullPath: '/records/$id'
+      preLoaderRoute: typeof RecordsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CompareRoute: CompareRoute,
+  UploadRoute: UploadRoute,
+  ValidationRoute: ValidationRoute,
+  VerificationRoute: VerificationRoute,
+  RecordsIdRoute: RecordsIdRoute,
+  RecordsIndexRoute: RecordsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
