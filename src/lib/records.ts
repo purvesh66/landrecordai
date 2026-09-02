@@ -4,6 +4,7 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 
+import { logAuditEvent } from "./audit";
 import type { LandRecord, OfficerDecision } from "./pipeline/types";
 
 function toRecord(row: Record<string, unknown>): LandRecord {
