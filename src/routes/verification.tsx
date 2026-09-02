@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, createFileRoute } from "@tanstack/react-router";
 
 import { AppShell } from "@/components/app-shell";
+import { ExportReportButton } from "@/components/export-report-button";
 import { RiskBadge, StatusBadge } from "@/components/indicators";
 import { OfficerActions } from "@/components/officer-actions";
 import { Button } from "@/components/ui/button";
