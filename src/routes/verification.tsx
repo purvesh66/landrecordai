@@ -88,6 +88,12 @@ function VerificationPage() {
               )}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 <OfficerActions recordId={record.id} size="sm" />
+                <ExportReportButton
+                  recordId={record.id}
+                  size="sm"
+                  variant="outline"
+                  label="Export PDF"
+                />
                 <Button asChild size="sm" variant="ghost">
                   <Link to="/records/$id" params={{ id: record.id }}>
                     View record
