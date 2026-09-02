@@ -144,6 +144,88 @@ export const processDocument = createServerFn({ method: "POST" })
       throw new Error("The processed record could not be saved. Please try again.");
     }
 
+    // --- Stage 6: Audit trail ------------------------------------------------
+    const recordId = insert.data.id;
+    const now = Date.now();
+    const at = (offsetMs: number) => new Date(now + offsetMs).toISOString();
+    const verificationStatus = status === "Verified" ? "Verified" : "Review Required";
+    const missing = (Object.keys(fields) as (keyof ExtractedFields)[]).filter(
+      (key) => fields[key] == null,
+    );
+
+    await supabaseAdmin.from("audit_events").insert([
+      {
+        record_id: recordId,
+        event_type: "upload",
+        title: "Document received",
+        detail: `"${filename}" (${(bytes.byteLength / 1024).toFixed(0)} KB, ${ocr.documentKind.toUpperCase()}) was validated and stored securely as ${storagePath}.`,
+        actor: "System",
+        after_value: storagePath,
+        created_at: at(0),
+      },
+      {
+        record_id: recordId,
+        event_type: "ocr",
+        title: "OCR completed",
+        detail: `The ${ocr.engine} engine transcribed ${ocr.text.length} characters from the document with an estimated legibility of ${ocr.confidence}%.`,
+        actor: "System",
+        after_value: `${ocr.confidence}% OCR confidence`,
+        confidence: ocr.confidence,
+        created_at: at(1000),
+      },
+      {
+        record_id: recordId,
+        event_type: "extraction",
+        title: "Field extraction completed",
+        detail:
+          `Rule-based extraction read owner "${fields.owner ?? "not found"}", survey number "${fields.survey_no ?? "not found"}", area ${fields.area ?? "not found"} ha, village "${fields.village ?? "not found"}". ` +
+          (missing.length === 0
+            ? "All mandatory fields were located."
+            : `${missing.length} mandatory field(s) could not be located: ${missing.join(", ")}.`),
+        actor: "System",
+        after_value: `${9 - missing.length}/9 mandatory fields found`,
+        confidence: extractConf,
+        created_at: at(2000),
+      },
+      {
+        record_id: recordId,
+        event_type: "validation",
+        title: "Validation completed",
+        detail:
+          validation.issues.length === 0
+            ? "No conflicts were found against the existing register."
+            : `${validation.issues.length} issue(s) detected: ${validation.issues.map((i) => i.explanation).join(" | ")}`,
+        actor: "System",
+        after_value: `${validation.issues.length} issue(s)`,
+        confidence: validation.validationConfidence,
+        created_at: at(3000),
+      },
+      {
+        record_id: recordId,
+        event_type: "score",
+        title: "Confidence and risk scored",
+        detail: `Overall confidence ${confidence.overall}% (${confidence.label}) from OCR ${confidence.breakdown.ocr}%, extraction ${confidence.breakdown.extraction}%, validation ${confidence.breakdown.validation}%. Weighted anomaly risk ${risk.score}/100 (${risk.label}).`,
+        actor: "System",
+        after_value: `${confidence.overall}% confidence · risk ${risk.score}`,
+        confidence: confidence.overall,
+        risk_score: risk.score,
+        created_at: at(4000),
+      },
+      {
+        record_id: recordId,
+        event_type: "status",
+        title: "Routed for verification",
+        detail: `Processing status set to ${status}. AI recommendation: ${recommendation}. The record awaits a human officer decision and is never auto-approved.`,
+        actor: "System",
+        before_value: "Pending",
+        after_value: verificationStatus,
+        confidence: confidence.overall,
+        risk_score: risk.score,
+        created_at: at(5000),
+      },
+    ]);
+
+
     return {
       recordId: insert.data.id,
       ocrText: ocr.text,
