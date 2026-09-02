@@ -89,9 +89,12 @@ export function BulkUpload() {
   const failed = items.filter((item) => item.state === "failed").length;
   const queued = items.filter((item) => item.state !== "completed" && item.state !== "failed").length;
 
-  function update(key: string, patch: Partial<QueueItem>) {
+  function update(
+    key: string,
+    patch: Partial<Record<keyof QueueItem, QueueItem[keyof QueueItem] | undefined>>,
+  ) {
     setItems((current) =>
-      current.map((item) => (item.key === key ? { ...item, ...patch } : item)),
+      current.map((item) => (item.key === key ? ({ ...item, ...patch } as QueueItem) : item)),
     );
   }
 
