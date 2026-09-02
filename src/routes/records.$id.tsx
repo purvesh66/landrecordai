@@ -4,6 +4,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { ExternalLink } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AuditTimeline } from "@/components/audit-timeline";
+import { ExportReportButton } from "@/components/export-report-button";
 import { ExplainPanel } from "@/components/explain-panel";
 import { ConfidenceMeter, RiskMeter, StatusBadge } from "@/components/indicators";
 import { OfficerActions } from "@/components/officer-actions";
@@ -246,6 +248,9 @@ function RecordDetail() {
           </div>
         </CardContent>
       </Card>
+      <div className="mt-4">
+        <AuditTimeline recordId={record.id} />
+      </div>
     </AppShell>
   );
 }
