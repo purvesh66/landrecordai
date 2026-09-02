@@ -92,6 +92,7 @@ function RecordDetail() {
       subtitle={`Survey No. ${record.survey_no ?? "—"} · ${record.village ?? "Village missing"}, ${record.taluka ?? "—"}, ${record.district ?? "—"}`}
       actions={
         <>
+          <ExportReportButton recordId={record.id} />
           {record.document && (
             <Button
               variant="outline"
