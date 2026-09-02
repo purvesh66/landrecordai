@@ -80,6 +80,7 @@ export function BulkUpload() {
   const [dragging, setDragging] = useState(false);
   const [running, setRunning] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const removedRef = useRef<Set<string>>(new Set());
   const queryClient = useQueryClient();
   const process = useServerFn(processDocument);
 
@@ -127,6 +128,7 @@ export function BulkUpload() {
     let ok = 0;
     let bad = 0;
     for (const item of pending) {
+      if (removedRef.current.has(item.key)) continue;
       // Sequential on purpose: keeps OCR throughput stable and progress honest.
       // eslint-disable-next-line no-await-in-loop
       const success = await runOne(item);
@@ -316,16 +318,17 @@ export function BulkUpload() {
                           size="sm"
                           variant="outline"
                           disabled={running || Boolean(validateFile(item.file))}
-                          onClick={() => void runQueue([item])}
+                          onClick={() => { removedRef.current.delete(item.key); void runQueue([item]); }}
                         >
                           <RotateCcw className="mr-1.5 h-3.5 w-3.5" /> Retry
                         </Button>
                         <Button
                           size="sm"
                           variant="ghost"
-                          onClick={() =>
-                            setItems((current) => current.filter((row) => row.key !== item.key))
-                          }
+                          onClick={() => {
+                            removedRef.current.add(item.key);
+                            setItems((current) => current.filter((row) => row.key !== item.key));
+                          }}
                         >
                           <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Remove
                         </Button>
@@ -338,9 +341,10 @@ export function BulkUpload() {
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() =>
-                          setItems((current) => current.filter((row) => row.key !== item.key))
-                        }
+                        onClick={() => {
+                          removedRef.current.add(item.key);
+                          setItems((current) => current.filter((row) => row.key !== item.key));
+                        }}
                       >
                         <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Remove from queue
                       </Button>
