@@ -4,6 +4,7 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 
+import { logAuditEvent } from "./audit";
 import type { LandRecord, OfficerDecision } from "./pipeline/types";
 
 function toRecord(row: Record<string, unknown>): LandRecord {
@@ -85,6 +86,8 @@ export async function recordOfficerDecision(
   notes?: string,
   officerName = "Demo Officer",
 ): Promise<void> {
+  const previous = await getRecordById(recordId);
+
   const { error: decisionError } = await supabase.from("officer_decisions").insert({
     record_id: recordId,
     decision,
@@ -98,6 +101,20 @@ export async function recordOfficerDecision(
     .update({ verification_status: DECISION_TO_STATUS[decision] })
     .eq("id", recordId);
   if (error) throw new Error(error.message);
+
+  await logAuditEvent({
+    record_id: recordId,
+    event_type: "officer",
+    title: `Officer decision: ${decision}`,
+    detail:
+      notes?.trim() ||
+      `${officerName} recorded the decision "${decision}", overriding or confirming the AI recommendation "${previous?.ai_recommendation ?? "None"}".`,
+    actor: officerName,
+    before_value: previous?.verification_status ?? null,
+    after_value: DECISION_TO_STATUS[decision],
+    confidence: previous?.confidence ?? null,
+    risk_score: previous?.risk_score ?? null,
+  });
 }
 
 export type DashboardStats = {

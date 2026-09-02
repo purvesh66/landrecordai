@@ -14,6 +14,56 @@ export type Database = {
   }
   public: {
     Tables: {
+      audit_events: {
+        Row: {
+          actor: string
+          after_value: string | null
+          before_value: string | null
+          confidence: number | null
+          created_at: string
+          detail: string | null
+          event_type: string
+          id: string
+          record_id: string
+          risk_score: number | null
+          title: string
+        }
+        Insert: {
+          actor?: string
+          after_value?: string | null
+          before_value?: string | null
+          confidence?: number | null
+          created_at?: string
+          detail?: string | null
+          event_type: string
+          id?: string
+          record_id: string
+          risk_score?: number | null
+          title: string
+        }
+        Update: {
+          actor?: string
+          after_value?: string | null
+          before_value?: string | null
+          confidence?: number | null
+          created_at?: string
+          detail?: string | null
+          event_type?: string
+          id?: string
+          record_id?: string
+          risk_score?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "audit_events_record_id_fkey"
+            columns: ["record_id"]
+            isOneToOne: false
+            referencedRelation: "land_records"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       land_records: {
         Row: {
           ai_recommendation: string | null
