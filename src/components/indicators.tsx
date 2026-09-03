@@ -1,9 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { confidenceLabel, riskLabel } from "@/lib/pipeline/scoring";
 import { cn } from "@/lib/utils";
 
 export function StatusBadge({ status }: { status: string }) {
+  const { t } = useI18n();
   const map: Record<string, string> = {
     Verified: "bg-success/15 text-success border-success/30",
     Approved: "bg-success/15 text-success border-success/30",
@@ -14,13 +16,14 @@ export function StatusBadge({ status }: { status: string }) {
   };
   return (
     <Badge variant="outline" className={cn("font-medium", map[status] ?? map["Pending"])}>
-      {status}
+      {t(`status.${status}` as TranslationKey)}
     </Badge>
   );
 }
 
 export function ConfidenceMeter({ value, compact }: { value: number; compact?: boolean }) {
-  const label = confidenceLabel(value);
+  const { t } = useI18n();
+  const label = t(`conf.${confidenceLabel(value)}` as TranslationKey);
   const tone =
     value >= 90 ? "bg-success" : value >= 70 ? "bg-warning" : "bg-destructive";
   return (
@@ -36,7 +39,8 @@ export function ConfidenceMeter({ value, compact }: { value: number; compact?: b
 }
 
 export function RiskMeter({ value, compact }: { value: number; compact?: boolean }) {
-  const label = riskLabel(value);
+  const { t } = useI18n();
+  const label = t(`risk.${riskLabel(value)}` as TranslationKey);
   const tone =
     value >= 60 ? "bg-destructive" : value >= 30 ? "bg-warning" : "bg-success";
   return (
@@ -51,7 +55,8 @@ export function RiskMeter({ value, compact }: { value: number; compact?: boolean
 }
 
 export function RiskBadge({ value }: { value: number }) {
-  const label = riskLabel(value);
+  const { t } = useI18n();
+  const label = t(`risk.${riskLabel(value)}` as TranslationKey);
   const tone =
     value >= 60
       ? "bg-destructive/12 text-destructive border-destructive/30"

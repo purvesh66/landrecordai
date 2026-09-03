@@ -8,22 +8,55 @@ import {
   UserCheck,
   Landmark,
   GitCompareArrows,
+  BarChart3,
+  Languages,
   Menu,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { LANGUAGES, useI18n, type Lang, type TranslationKey } from "@/lib/i18n";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { to: "/", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/upload", label: "Upload Document", icon: Upload },
-  { to: "/records", label: "Land Records", icon: FileStack },
-  { to: "/validation", label: "Validation", icon: ShieldAlert },
-  { to: "/compare", label: "Compare Records", icon: GitCompareArrows },
-  { to: "/gis", label: "GIS Map", icon: MapIcon },
-  { to: "/verification", label: "Verification", icon: UserCheck },
-] as const;
+const NAV: { to: string; key: TranslationKey; icon: typeof LayoutDashboard }[] = [
+  { to: "/", key: "nav.dashboard", icon: LayoutDashboard },
+  { to: "/upload", key: "nav.upload", icon: Upload },
+  { to: "/records", key: "nav.records", icon: FileStack },
+  { to: "/validation", key: "nav.validation", icon: ShieldAlert },
+  { to: "/analytics", key: "nav.analytics", icon: BarChart3 },
+  { to: "/compare", key: "nav.compare", icon: GitCompareArrows },
+  { to: "/gis", key: "nav.gis", icon: MapIcon },
+  { to: "/verification", key: "nav.verification", icon: UserCheck },
+];
+
+function LanguageSelect() {
+  const { lang, setLang, t } = useI18n();
+  return (
+    <Select value={lang} onValueChange={(value) => setLang(value as Lang)}>
+      <SelectTrigger
+        aria-label={t("shell.language")}
+        className="h-9 w-[132px] border-white/25 bg-white/10 text-primary-foreground focus:ring-white/40 [&>svg]:opacity-80"
+      >
+        <Languages className="mr-1.5 h-4 w-4 shrink-0" />
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent align="end">
+        {LANGUAGES.map((option) => (
+          <SelectItem key={option.code} value={option.code}>
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
 
 export function AppShell({
   title,
@@ -37,6 +70,7 @@ export function AppShell({
   children: ReactNode;
 }) {
   const [open, setOpen] = useState(false);
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen bg-background">
@@ -47,20 +81,25 @@ export function AppShell({
             size="icon"
             className="text-primary-foreground hover:bg-white/10 lg:hidden"
             onClick={() => setOpen((v) => !v)}
-            aria-label="Toggle navigation"
+            aria-label={t("shell.toggleNav")}
           >
             <Menu className="h-5 w-5" />
           </Button>
           <Landmark className="h-7 w-7 shrink-0" />
           <div className="min-w-0">
-            <p className="truncate text-base font-semibold tracking-tight">Land Record AI</p>
+            <p className="truncate text-base font-semibold tracking-tight">{t("shell.brand")}</p>
             <p className="truncate text-[11px] uppercase tracking-widest opacity-80">
-              Intelligent Land Record Digitization &amp; Validation
+              {t("shell.tagline")}
             </p>
           </div>
-          <div className="ml-auto hidden items-center gap-2 text-xs sm:flex">
-            <span className="rounded-full bg-white/15 px-3 py-1">Prototype · Demo Data</span>
-            <span className="rounded-full bg-white/15 px-3 py-1">Officer: Demo Officer</span>
+          <div className="ml-auto flex items-center gap-2 text-xs">
+            <span className="hidden rounded-full bg-white/15 px-3 py-1 xl:inline">
+              {t("shell.badgeDemo")}
+            </span>
+            <span className="hidden rounded-full bg-white/15 px-3 py-1 xl:inline">
+              {t("shell.badgeOfficer")}
+            </span>
+            <LanguageSelect />
           </div>
         </div>
       </header>
@@ -73,7 +112,7 @@ export function AppShell({
           )}
         >
           <nav className="space-y-1">
-            {NAV.map(({ to, label, icon: Icon }) => (
+            {NAV.map(({ to, key, icon: Icon }) => (
               <Link
                 key={to}
                 to={to}
@@ -85,13 +124,12 @@ export function AppShell({
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm text-sidebar-foreground/85 transition-colors hover:bg-sidebar-accent/70 hover:text-sidebar-accent-foreground"
               >
                 <Icon className="h-4 w-4" />
-                {label}
+                {t(key)}
               </Link>
             ))}
           </nav>
           <div className="mt-6 rounded-md border border-sidebar-border/60 bg-sidebar-accent/40 p-3 text-[11px] leading-relaxed text-sidebar-foreground/80">
-            All AI outputs are advisory. Flagged records are never auto-approved — a revenue
-            officer makes the final decision.
+            {t("shell.advisory")}
           </div>
         </aside>
 
