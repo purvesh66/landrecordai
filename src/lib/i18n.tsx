@@ -225,6 +225,8 @@ const en = {
   "pdf.footer":
     "Land Record AI — prototype verification report. Sample/demo data; not a legal land title document.",
   "pdf.page": "Page {page} of {total}",
+
+  ...enExtra,
 };
 
 export type TranslationKey = keyof typeof en;
