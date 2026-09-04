@@ -19,6 +19,8 @@ import {
   type ReactNode,
 } from "react";
 
+import { enExtra, hiExtra, mrExtra } from "./i18n-extra";
+
 export type Lang = "en" | "hi" | "mr";
 
 export const LANGUAGES: { code: Lang; label: string; short: string }[] = [
@@ -225,6 +227,8 @@ const en = {
   "pdf.footer":
     "Land Record AI — prototype verification report. Sample/demo data; not a legal land title document.",
   "pdf.page": "Page {page} of {total}",
+
+  ...enExtra,
 };
 
 export type TranslationKey = keyof typeof en;
@@ -424,6 +428,8 @@ const hi: Partial<Record<TranslationKey, string>> = {
   "pdf.footer":
     "लैंड रिकॉर्ड एआई — प्रोटोटाइप सत्यापन रिपोर्ट। नमूना/डेमो डेटा; यह वैध भूमि स्वामित्व दस्तावेज़ नहीं है।",
   "pdf.page": "पृष्ठ {page} / {total}",
+
+  ...hiExtra,
 };
 
 const mr: Partial<Record<TranslationKey, string>> = {
@@ -621,6 +627,8 @@ const mr: Partial<Record<TranslationKey, string>> = {
   "pdf.footer":
     "लँड रेकॉर्ड एआय — प्रोटोटाइप पडताळणी अहवाल. नमुना/डेमो डेटा; हे कायदेशीर भूमी मालकी कागदपत्र नाही.",
   "pdf.page": "पृष्ठ {page} / {total}",
+
+  ...mrExtra,
 };
 
 const DICTS: Record<Lang, Partial<Record<TranslationKey, string>>> = { en, hi, mr };
