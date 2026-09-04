@@ -10,6 +10,7 @@ import { BulkUpload } from "@/components/bulk-upload";
 import { ExplainPanel } from "@/components/explain-panel";
 import { ConfidenceMeter, RiskMeter, StatusBadge } from "@/components/indicators";
 import { OfficerActions } from "@/components/officer-actions";
+import { SampleDocuments } from "@/components/sample-documents";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -110,7 +111,8 @@ function UploadPage() {
         <TabsContent value="bulk" className="mt-0">
           <BulkUpload />
         </TabsContent>
-        <TabsContent value="single" className="mt-0">
+        <TabsContent value="single" className="mt-0 space-y-6">
+      <SampleDocuments onProcessed={setResult} />
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
         <Card>
           <CardHeader className="pb-2">
