@@ -20,6 +20,7 @@ import {
 } from "react";
 
 import { enExtra, hiExtra, mrExtra } from "./i18n-extra";
+import { enMore, hiMore, mrMore } from "./i18n-more";
 
 export type Lang = "en" | "hi" | "mr";
 
@@ -229,6 +230,7 @@ const en = {
   "pdf.page": "Page {page} of {total}",
 
   ...enExtra,
+  ...enMore,
 };
 
 export type TranslationKey = keyof typeof en;
@@ -430,6 +432,7 @@ const hi: Partial<Record<TranslationKey, string>> = {
   "pdf.page": "पृष्ठ {page} / {total}",
 
   ...hiExtra,
+  ...hiMore,
 };
 
 const mr: Partial<Record<TranslationKey, string>> = {
@@ -629,6 +632,7 @@ const mr: Partial<Record<TranslationKey, string>> = {
   "pdf.page": "पृष्ठ {page} / {total}",
 
   ...mrExtra,
+  ...mrMore,
 };
 
 const DICTS: Record<Lang, Partial<Record<TranslationKey, string>>> = { en, hi, mr };
